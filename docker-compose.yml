@@ -4,8 +4,8 @@ services:
     build: ./api
     ports:
       - "3002:3002"
-    # depends_on:
-    #   - db # If you have a database, uncomment this line
+    depends_on:
+      - db
   spa:
     build: ./spa
     ports:
@@ -13,10 +13,11 @@ services:
     depends_on:
       - api # Start the API before the React app
 
-  # Uncomment if you're using a database
-  # db:
-  #   image: postgres:latest # Or your preferred database
-  #   environment:
-  #     POSTGRES_USER: your_db_user
-  #     POSTGRES_PASSWORD: your_db_password
-  #     POSTGRES_DB: your_db_name
+  db:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: foo # Set root user
+      MONGO_INITDB_ROOT_PASSWORD: bar # Set root password
+      MONGO_INITDB_DATABASE: taskmanager # Create initial database (optional)
+    ports:
+      - "27017:27017" # Expose MongoDB port

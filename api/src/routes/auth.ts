@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const SECRET_KEY = 'secret_key';
-
+let SESSIONS: string[] = [];
 
 // Signup route
 router.post('/signup', async (req: Request, res: Response) => {
@@ -61,13 +61,27 @@ router.post('/login', async (req: Request, res: Response) => {
         }
 
         const token = jwt.sign({ user: user.email }, SECRET_KEY, { expiresIn: '30m' });
-
+        SESSIONS.push(token);
         res.status(200).json({ token });
 
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ message: 'Something went wrong' });
     }
+});
+
+router.post('/logout', async (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {        
+        const token = authHeader.split('Bearer ')[1]; // Get token from Bearer header
+        
+        // deleting token
+        SESSIONS = SESSIONS.filter((session) => session != token);
+        return res.sendStatus(204);
+    }
+
+    return res.status(400).json({ message: 'Missing authorization header' });
 });
 
 export default router;

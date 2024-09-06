@@ -4,9 +4,11 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/auth';
 import taskRoutes from './routes/task'; 
 import rateLimit from 'express-rate-limit';
+import 'dotenv/config';
 
 const app: Application = express();
-const port: number = 3002;
+const port = process.env.PORT || 3000;
+
 
 // MongoDB connection
 mongoose.connect('mongodb://foo:bar@localhost:27017/taskmanager?authSource=admin')

@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth';
+import taskRoutes from './routes/task'; 
 import rateLimit from 'express-rate-limit';
 
 const app: Application = express();
@@ -31,8 +32,8 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello from Express & TypeScript API!');
 });
 
-// Mount auth routes under '/api/auth'
 app.use('/api/auth', authRoutes);
+app.use('/api', taskRoutes);
 
 // Start the server
 app.listen(port, () => {

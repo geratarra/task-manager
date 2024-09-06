@@ -1,11 +1,12 @@
 import express, { Request, Response } from 'express';
 import User from '../models/User';
+import { SessionService } from '../services/SessionService';
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const SECRET_KEY = 'secret_key';
-let SESSIONS: string[] = [];
+const sessionService = new SessionService();
+
 
 // Signup route
 router.post('/signup', async (req: Request, res: Response) => {
@@ -60,8 +61,7 @@ router.post('/login', async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ user: user.email }, SECRET_KEY, { expiresIn: '30m' });
-        SESSIONS.push(token);
+        const token = sessionService.addSession(email);
         res.status(200).json({ token });
 
     } catch (error) {
@@ -70,6 +70,7 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 });
 
+// Logout route
 router.post('/logout', async (req: Request, res: Response) => {
     const authHeader = req.headers.authorization;
 
@@ -77,7 +78,7 @@ router.post('/logout', async (req: Request, res: Response) => {
         const token = authHeader.split('Bearer ')[1]; // Get token from Bearer header
         
         // deleting token
-        SESSIONS = SESSIONS.filter((session) => session != token);
+        sessionService.removeSession(token);
         return res.sendStatus(204);
     }
 

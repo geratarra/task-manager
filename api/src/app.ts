@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 
 // MongoDB connection
-mongoose.connect('mongodb://foo:bar@localhost:27017/taskmanager?authSource=admin')
+mongoose.connect(process.env.MONGO_URI || '')
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Error connecting to MongoDB:', err));
 

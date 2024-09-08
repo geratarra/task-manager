@@ -6,12 +6,12 @@ services:
       - "3002:3002"
     depends_on:
       - db
-  spa:
-    build: ./spa
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api # Start the API before the React app
+  # spa:
+  #   build: ./spa
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - api # Start the API before the React app
 
   db:
     image: mongo:latest

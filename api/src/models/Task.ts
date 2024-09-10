@@ -1,7 +1,15 @@
 import mongoose from 'mongoose';
 import { TASK_STATUS } from '../utils/constants';
 
-const Task = new mongoose.Schema({
+export interface ITask {
+    user: mongoose.Schema.Types.ObjectId;
+    title: string;
+    description: string;
+    dueDate: number;
+    status: string;
+}
+
+const Task = new mongoose.Schema<ITask>({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -26,4 +34,4 @@ const Task = new mongoose.Schema({
     }
 });
 
-export default mongoose.model('Task', Task);
+export default mongoose.model<ITask>('Task', Task);

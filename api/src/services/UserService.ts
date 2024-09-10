@@ -1,13 +1,10 @@
-const User = require('../models/User');
+import { IUser } from "../models/User";
+import User from '../models/User';
+
 const bcrypt = require('bcrypt');
 
-interface User {
-    email: string;
-    password: string;
-}
-
 export class UserService {
-    async createUser({ email, password }: User) {
+    async createUser({ email, password }: IUser): Promise<IUser> {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 

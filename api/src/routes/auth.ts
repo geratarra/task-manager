@@ -34,7 +34,7 @@ export const createAuthRouter = (authController: AuthController) => {
      *       500:
      *         description: Internal server error
      */
-    router.post('/signup', authController.signup);
+    router.post('/signup', authController.signup.bind(authController));
 
     /**
      * @swagger
@@ -76,7 +76,7 @@ export const createAuthRouter = (authController: AuthController) => {
      *       500:
      *         description: Internal server error
      */
-    router.post('/login', authController.login);
+    router.post('/login', authController.login.bind(authController));
 
     /**
      * @swagger
@@ -93,7 +93,7 @@ export const createAuthRouter = (authController: AuthController) => {
      *       400:
      *         description: Bad request - Missing authorization header
      */
-    router.post('/logout', authController.logout);
+    router.post('/logout', authController.logout.bind(authController));
 
     return router;
 }

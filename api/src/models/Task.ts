@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { TASK_STATUS } from '../utils/constants';
 
 export interface ITask {
-    user: mongoose.Schema.Types.ObjectId;
+    user: mongoose.Types.ObjectId;
     title: string;
     description: string;
     dueDate: number;

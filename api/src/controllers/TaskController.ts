@@ -1,4 +1,4 @@
-import Task from "../models/Task";
+import Task, { ITask } from "../models/Task";
 import User from "../models/User";
 import { Request, Response } from 'express';
 import { TaskService } from "../services/TaskService";
@@ -12,7 +12,7 @@ export class TaskController {
 
     async getTasks(req: Request, res: Response) {
         try {
-            const tasks = await this.taskService.getTasksForUser(req.user.email);
+            const tasks: ITask[] | null = await this.taskService.getTasksForUser(req.user.email);
             res.status(200).json(tasks);
         } catch (error) {
             console.error('Error gettings tasks: ', error);
@@ -55,7 +55,7 @@ export class TaskController {
             const user = await User.findOne({ email: req.user.email });
             const task = await Task.find({ user: user, _id: req.params.id });
     
-            if (!task) {
+            if (!task || task.length === 0) {
                 return res.status(404).json({ message: 'Task not found' });
             }
     

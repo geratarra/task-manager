@@ -2,7 +2,7 @@ import { AuthController } from './AuthController';
 import { UserService } from '../services/UserService';
 import { Request, Response } from 'express';
 import User, { IUser } from '../models/User';
-import { afterEach, beforeEach, describe, expect, it, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { SessionService } from '../services/SessionService';
 
 const bcrypt = require('bcrypt');

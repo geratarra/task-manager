@@ -10,6 +10,7 @@ import { AuthController } from './controllers/AuthController';
 import { TaskController } from './controllers/TaskController';
 import { UserService } from './services/UserService';
 import { TaskService } from './services/TaskService';
+const cors = require('cors');
 
 const app: Application = express();
 const userService = new UserService();
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI || '')
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Middleware
+app.use(cors())
 app.use(bodyParser.json());
 // rate limiter middleware
 const limiter = rateLimit({

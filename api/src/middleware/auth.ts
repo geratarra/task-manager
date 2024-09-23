@@ -5,12 +5,16 @@ const jwt = require('jsonwebtoken');
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
+    const jwtCookie = req.cookies.jwt;
 
-    if (authHeader) {
-        const token = authHeader.split('Bearer ')[1]; // Get token from Bearer header
-
+    const tokenFromCookie = jwtCookie;
+    const tokenFromAuthHeader = authHeader ? authHeader.split('Bearer ')[1] : null;
+    const token = tokenFromCookie || tokenFromAuthHeader;
+    
+    if (token) {
         jwt.verify(token, JWT_KEY, (err: any, user: any) => {
             if (err) {
+                console.error(err);
                 return res.sendStatus(403);
             }
             req.user = user;

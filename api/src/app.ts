@@ -11,6 +11,12 @@ import { TaskController } from './controllers/TaskController';
 import { UserService } from './services/UserService';
 import { TaskService } from './services/TaskService';
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
+
+const corsOptions = {
+    origin: 'http://localhost:3001',
+    credentials: true,
+};
 
 const app: Application = express();
 const userService = new UserService();
@@ -24,7 +30,8 @@ mongoose.connect(process.env.MONGO_URI || '')
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Middleware
-app.use(cors())
+app.use(cookieParser());
+app.use(cors(corsOptions))
 app.use(bodyParser.json());
 // rate limiter middleware
 const limiter = rateLimit({

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import User from '../models/User';
 import { SessionService } from '../services/SessionService';
 import { UserService } from '../services/UserService';
+import { MAX_AGE_JWT_COOKIE } from '../utils/constants';
 
 const bcrypt = require('bcrypt');
 const sessionService = new SessionService();
@@ -62,6 +63,7 @@ export class AuthController {
             }
 
             const token = sessionService.addSession(email);
+            res.cookie('jwt', token, { httpOnly: true, maxAge: MAX_AGE_JWT_COOKIE });
             res.status(200).json({ token });
 
         } catch (error) {
@@ -83,6 +85,7 @@ export class AuthController {
 
                 // deleting token
                 sessionService.removeSession(token);
+                res.clearCookie('jwt');
                 return res.sendStatus(204);
             }
 
@@ -95,5 +98,9 @@ export class AuthController {
                 res.status(500).json({ message: 'An unknown error occurred' });
             }
         }
+    }
+
+    async verifyToken(req: Request, res: Response) {
+        res.status(200).json({ token: req.cookies.jwt });
     }
 }

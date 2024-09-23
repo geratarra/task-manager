@@ -17,7 +17,7 @@ function SignupForm() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>()
+    } = useForm<Inputs>();
     const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<Inputs> = async (formData) => {
@@ -72,7 +72,11 @@ function SignupForm() {
                     </div>
                     {errors.password && <span className='help is-danger'>This field is required</span>}
                 </div>
-                <button className='button is-link' type="submit">Submit</button>
+                <div className='field'>
+                    <div className='control'>
+                        <button className='button is-link' type="submit">Submit</button>
+                    </div>
+                </div>
             </form>
             <div className='block'>
                 {error && <div className='block notification is-danger'>{error}</div>}

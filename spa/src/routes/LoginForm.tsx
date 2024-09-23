@@ -11,7 +11,6 @@ function LoginForm() {
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError(null);
@@ -56,7 +55,7 @@ function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <button type="submit">Login</button>
+            <button className='button is-primary' type="submit">Login</button>
         </form>
     );
 }

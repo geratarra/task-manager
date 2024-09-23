@@ -6,6 +6,7 @@ import LoginForm from './routes/LoginForm';
 import SignupForm from './routes/SignupForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './utils/AuthProvider';
+import TaskForm from './routes/TaskForm';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignupForm />,
   },
+  {
+    path: "/task/add",
+    element: <ProtectedRoute><TaskForm /></ProtectedRoute>,
+  },
+  {
+    path: "/task/update",
+    element: <ProtectedRoute><TaskForm /></ProtectedRoute>,
+  }
 ]);
 
 function App() {

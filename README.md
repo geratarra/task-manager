@@ -1,64 +1,42 @@
-## Encora Task Manager
+# Encora Task Manager
 
-This repository contains a simple task manager application with a separate frontend (SPA) and backend (API).
+## Getting Started with Docker
 
-### Project Structure
-
-- **`api`**: Contains the backend API built with Node.js and Express.
-- **`spa`**: Contains the frontend Single Page Application built with React.
+This project uses Docker to simplify the development setup. Make sure you have Docker installed on your machine.
 
 ### Prerequisites
 
-- **Node.js and npm:** Make sure you have Node.js and npm installed on your system. You can download them from [https://nodejs.org/](https://nodejs.org/).
-- **MongoDB:** You need a running MongoDB instance. You can download it from [https://www.mongodb.com/](https://www.mongodb.com/).
+- Docker: [https://www.docker.com/get-started](https://www.docker.com/get-started)
 
-### Setup and Execution
+### Steps
 
-#### 1. Backend (API)
+1. **Clone the repository:**
 
-1.  **Navigate to the API directory:**
+   ```bash
+   git clone https://github.com/your-username/encora-task-manager.git
+   cd encora-task-manager
+2. **Build the Docker images:**
+
     ```bash
-    cd api
-    ```
-2.  **Install dependencies:**
+    docker-compose build
+3. **Start the containers:**
     ```bash
-    npm install
+    docker-compose up -d
     ```
-3.  **Start the development server:**
-    ```bash
-    npm run dev 
-    ```
-    The API will be running at `http://localhost:3000` (or the port you specified).
+    This command will start the API, React app, and MongoDB containers in detached mode.
+4. **Access the application:**
 
-#### 2. Frontend (SPA)
+    Open your web browser and go to http://localhost:3001. You should see the Encora Task Manager application running.
 
-1.  **Navigate to the SPA directory:**
-    ```bash
-    cd spa
-    ```
-2.  **Install dependencies:**
-    ```bash
-    npm install  
-    ```
-3.  **Set up API endpoint:**
-    -   Update the API base URL in your frontend application's configuration (e.g., in a `.env` file or configuration file) to point to your backend API:
-        ```
-        API_BASE_URL=http://localhost:3000 
-        ```
-4.  **Start the development server:**
-    ```bash
-    npm run dev  
-    ```
-    This command will vary depending on your frontend framework. The SPA will be running at `http://localhost:3001` (or the port specified by your frontend framework).
-
-### Using the Application
-
-1.  **Access the SPA:** Open your web browser and go to the address where your SPA is running (e.g., `http://localhost:3001`).
-2.  **Sign up/Log in:** Create a new account or log in if you already have one.
-3.  **Manage Tasks:** Start adding, editing, deleting, and marking tasks as complete.
-
+### Stopping the application
+To stop the Docker containers, run:
+```bash
+docker-compose down
+```
 ### Additional Notes
+- The API will be accessible at http://localhost:3002.
+- MongoDB data will be persisted in a Docker volume.
 
--   **API Documentation:** The API documentation is available at `http://localhost:3000/api-docs` (or your API base URL + `/api-docs`) after you start the API server.
--   **Further Development:** Feel free to explore the codebase and make changes to customize the application further.
-
+### Troubleshooting
+- If you encounter any issues, make sure Docker is running on your machine.
+- You can view container logs using `docker-compose logs [service-name]`, replacing [service-name] with the name of the service you want to inspect (e.g., api, spa, db).

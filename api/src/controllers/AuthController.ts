@@ -63,7 +63,12 @@ export class AuthController {
             }
 
             const token = sessionService.addSession(email);
-            res.cookie('jwt', token, { httpOnly: true, maxAge: MAX_AGE_JWT_COOKIE });
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                maxAge: 1000*60*30,
+                sameSite: 'none',
+                secure: false
+            });
             res.status(200).json({ token });
 
         } catch (error) {

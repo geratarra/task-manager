@@ -54,7 +54,7 @@ function TaskForm() {
     }
 
     return (
-        <div>
+        <div className="container">
             <h2 className='title is-2'>{ state ? 'Edit' : 'Add'} Task</h2>
             <form onSubmit={handleSubmit(onSubmit)} className='block'>
                 <div className='field'>

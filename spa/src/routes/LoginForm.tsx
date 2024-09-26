@@ -26,7 +26,7 @@ function LoginForm() {
 
             if (token) {
                 login(token);
-                navigate('/');
+                navigate('/list');
             } else {
                 setError('Invalid credentials');
             }
@@ -37,26 +37,39 @@ function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            <div>
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)} />
+        <div className='container'>
+            <h2 className='title is-2'>Login</h2>
+            <form onSubmit={handleSubmit} className='block'>
+                <div className='field'>
+                    <label htmlFor="email">Email:</label>
+                    <div className='control'>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                </div>
+                <div className='field'>
+                    <label htmlFor="password">Password:</label>
+                    <div className='control'>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                </div>
+                <div className='field'>
+                    <div className='control'>
+                        <button className='button is-primary' type="submit">Login</button>
+                    </div>
+                </div>
+            </form>
+            <div className='block'>
+                {error && <div className='block notification is-danger'>{error}</div>}
             </div>
-            <div>
-                <label htmlFor="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <button className='button is-primary' type="submit">Login</button>
-        </form>
+        </div>
     );
 }
 

@@ -3,12 +3,13 @@ import axios from 'axios';
 import { AuthContext } from '../utils/AuthProvider';
 import { API_URI } from '../utils/constants';
 import { ITask } from '../models/Task';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function TaskList() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -23,6 +24,7 @@ function TaskList() {
         setTasks(response.data);
       } catch (error: any) {
         console.error('Error fetching tasks:', error);
+        if (error.status === 401) navigate('/login');
         setError(error.response?.data?.message || 'Failed to fetch tasks.');
       }
     };
@@ -37,7 +39,7 @@ function TaskList() {
     event.preventDefault(); // Prevent default form submission behavior if needed
 
     try {
-      const response = await axios.delete(`${API_URI}/task/${task._id}`);
+      const response = await axios.delete(`${API_URI}/task/${task._id}`, { withCredentials: true });
       setError(null);
 
       if (response.status === 204) {
@@ -48,12 +50,13 @@ function TaskList() {
       }
     } catch (error: any) {
       console.error('Error deleting task:', error);
+      if (error.status === 401) navigate('/login');
       setError(error.response?.data?.message || 'Failed to delete task.');
     }
   }
 
   return (
-    <div>
+    <div className='container'>
       <h2 className='title is-2'>Task List</h2>
       <div className='block'>
         <Link to={'/task/add'} className='button is-link'>Add Task</Link>
@@ -66,7 +69,7 @@ function TaskList() {
       {tasks && tasks.length === 0 && <p>No tasks found.</p>}
 
       {tasks && tasks.length !== 0 &&
-        <table className='table'>
+        <table className='table container'>
           <thead>
             <tr>
               <th>Title</th>

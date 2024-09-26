@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import { createAuthRouter } from './routes/auth';
 import { createTaskRouter } from './routes/task';
 import rateLimit from 'express-rate-limit';
-import { PORT, RATE_LIMITER_WINDOW_MS } from './utils/constants';
+import { CORS_ORIGIN, PORT, RATE_LIMITER_WINDOW_MS } from './utils/constants';
 import { AuthController } from './controllers/AuthController';
 import { TaskController } from './controllers/TaskController';
 import { UserService } from './services/UserService';
@@ -14,7 +14,7 @@ const cors = require('cors');
 const cookieParser = require("cookie-parser");
 
 const corsOptions = {
-    origin: 'http://localhost:3001',
+    origin: CORS_ORIGIN,
     credentials: true,
 };
 
@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGO_URI || '')
 
 // Middleware
 app.use(cookieParser());
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 // rate limiter middleware
 const limiter = rateLimit({

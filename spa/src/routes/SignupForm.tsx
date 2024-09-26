@@ -42,6 +42,9 @@ function SignupForm() {
         }
     };
 
+    // Password validation regex
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} className='block'>
@@ -63,14 +66,20 @@ function SignupForm() {
                     <label htmlFor="password" className='label'>Password:</label>
                     <div className="control">
                         <input
-                            {...register("password", { required: true, minLength: 8 })}
+                            {...register("password", {
+                                required: true,
+                                minLength: 8,
+                                pattern: passwordRegex
+                            })}
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    {errors.password && <span className='help is-danger'>This field is required</span>}
+                    {errors.password?.type === 'required' && <span className='help is-danger'>This field is required</span>}
+                    {errors.password?.type === 'minLength' && <span className='help is-danger'>Password must be at least 8 characters long</span>}
+                    {errors.password?.type === 'pattern' && <span className='help is-danger'>Password must contain at least one uppercase letter, one number, and one special character</span>}
                 </div>
                 <div className='field'>
                     <div className='control'>

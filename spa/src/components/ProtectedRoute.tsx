@@ -14,7 +14,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }): React.Reac
         const checkAuth = async () => {
             if (!isAuthenticated) {
                 try {
-                    const response = await axios.get(API_URI + '/auth/verify-token', { withCredentials: true });
+                    const response = await axios.get(API_URI + '/auth/verify-token', { withCredentials: true,
+                        headers: {'Content-Type': 'application/json'}
+                     });
                     if (response.status === 200) {
                         login(response.data.token);
                         navigate(pathname);

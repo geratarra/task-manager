@@ -66,8 +66,8 @@ export class AuthController {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: 1000*60*30,
-                sameSite: 'none',
-                secure: false
+                secure: false,
+                sameSite: 'lax'
             });
             res.status(200).json({ token });
 
@@ -83,18 +83,16 @@ export class AuthController {
 
     async logout(req: Request, res: Response) {
         try {
-            const authHeader = req.headers.authorization;
+            const token = req.cookies?.jwt;
 
-            if (authHeader) {
-                const token = authHeader.split('Bearer ')[1]; // Get token from Bearer header
-
+            if (token) {
                 // deleting token
                 sessionService.removeSession(token);
                 res.clearCookie('jwt');
                 return res.sendStatus(204);
             }
 
-            return res.status(400).json({ message: 'Missing authorization header' });
+            return res.status(400).json({ message: 'Missing authorization token' });
         } catch (error) {
             console.error('Error during logout: ', error);
             if (error instanceof Error) {

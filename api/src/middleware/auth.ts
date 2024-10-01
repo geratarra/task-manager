@@ -10,7 +10,7 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
     const tokenFromCookie = jwtCookie;
     const tokenFromAuthHeader = authHeader ? authHeader.split('Bearer ')[1] : null;
     const token = tokenFromCookie || tokenFromAuthHeader;
-    
+
     if (token) {
         jwt.verify(token, JWT_KEY, (err: any, user: any) => {
             if (err) {

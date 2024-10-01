@@ -1,14 +1,21 @@
+import { FilterQuery } from 'mongoose';
 import Task, { ITask } from '../models/Task';
 import User from '../models/User';
 
 export class TaskService {
-    async getTasksForUser(email: string): Promise<ITask[] | null> {
+    async getTasksForUser(email: string, status?: string): Promise<ITask[] | null> {
         try {
             const user = await User.findOne({ email });
-            if (!user) {
-                return null; // Or throw an error if appropriate
+            const filter: FilterQuery<ITask> = { user: user?._id };
+
+            if (status) {
+                filter.status = status;
             }
-            return await Task.find({ user: user });
+
+            console.log('Getting tasks with filter:\n', filter);
+
+            const tasks = await Task.find(filter).populate('user', 'email');
+            return tasks;
         } catch (error) {
             console.error('Error getting tasks: ', error);
             throw error; // Re-throw to handle in the controller
@@ -22,12 +29,12 @@ export class TaskService {
                 return null; // Or throw an error
             }
 
-            const newTask = new Task({ 
-                user: user, 
-                title: taskData.title, 
-                description: taskData.description, 
-                dueDate: taskData.dueDate, 
-                status: taskData.status 
+            const newTask = new Task({
+                user: user,
+                title: taskData.title,
+                description: taskData.description,
+                dueDate: taskData.dueDate,
+                status: taskData.status
             });
 
             return await newTask.save();
@@ -41,7 +48,7 @@ export class TaskService {
         try {
             const user = await User.findOne({ email });
             if (!user) {
-                return null; 
+                return null;
             }
             return await Task.findOne({ user: user, _id: taskId });
         } catch (error) {
@@ -67,7 +74,7 @@ export class TaskService {
         try {
             const user = await User.findOne({ email });
             if (!user) {
-                return null; 
+                return null;
             }
             return await Task.findOneAndDelete({ user: user, _id: taskId });
         } catch (error) {

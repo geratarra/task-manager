@@ -12,7 +12,8 @@ export class TaskController {
 
     async getTasks(req: Request, res: Response) {
         try {
-            const tasks: ITask[] | null = await this.taskService.getTasksForUser(req.user.email);
+            const statusFilter = req.query.status as string; // Get status from query parameters
+            const tasks: ITask[] | null = await this.taskService.getTasksForUser(req.user.email, statusFilter);
             res.status(200).json(tasks);
         } catch (error) {
             console.error('Error gettings tasks: ', error);

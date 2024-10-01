@@ -4,31 +4,40 @@ import { AuthContext } from '../utils/AuthProvider';
 import { API_URI } from '../utils/constants';
 import { ITask } from '../models/Task';
 import { Link, useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { TaskFilter } from '../utils/types';
 
 function TaskList() {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { register, handleSubmit, reset } = useForm<{ status: string }>();
+
+  const fetchTasks = async (status?: string) => {
+    try {
+      const tasksUrl = API_URI + '/task';
+      const params: { status?: string } = {};
+
+      if (status) {
+        params.status = status;
+      }
+
+      const response = await axios.get(tasksUrl, {
+        withCredentials: true,
+        params,
+      });
+
+      setTasks(response.data);
+    } catch (error: any) {
+      console.error('Error fetching tasks:', error);
+      if (error.status === 401) navigate('/login');
+      setError(error.response?.data?.message || 'Failed to fetch tasks.');
+    }
+  };
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const tasksUrl = API_URI + '/task';
-        const response = await axios.get(tasksUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setTasks(response.data);
-      } catch (error: any) {
-        console.error('Error fetching tasks:', error);
-        if (error.status === 401) navigate('/login');
-        setError(error.response?.data?.message || 'Failed to fetch tasks.');
-      }
-    };
-
     if (token) {
       setError(null);
       fetchTasks();
@@ -37,6 +46,8 @@ function TaskList() {
 
   const deleteTask = (task: ITask): React.MouseEventHandler<HTMLButtonElement> => async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault(); // Prevent default form submission behavior if needed
+
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
       const response = await axios.delete(`${API_URI}/task/${task._id}`, { withCredentials: true });
@@ -55,11 +66,52 @@ function TaskList() {
     }
   }
 
+  const handleFilterSubmit: SubmitHandler<TaskFilter> = async (data) => {
+    fetchTasks(data.status);
+    setIsModalOpen(false);
+    reset();
+  }
+
   return (
     <div className='container'>
+      <div className={isModalOpen ? 'modal is-active' : 'modal'}>
+        <div className="modal-background"></div>
+        <div className="modal-content">
+          <form onSubmit={handleSubmit(handleFilterSubmit)}>
+            <div className="field">
+              <label className="label">Status</label>
+              <div className="control">
+                <label className="radio">
+                  <input type="radio" value="pending" {...register('status')} className='mr-2' />
+                  Pending
+                </label>
+                <label className="radio">
+                  <input type="radio" value="in progress" {...register('status')} className='mx-2' />
+                  In Progress
+                </label>
+                <label className="radio">
+                  <input type="radio" value="completed" {...register('status')} className='mx-2' />
+                  Completed
+                </label>
+              </div>
+            </div>
+            <div className='field is-grouped'>
+              <div className='control'>
+                <button className='button is-primary' type="submit">Apply</button>
+              </div>
+              <div className='control'>
+                <button className='button is-danger' onClick={() => fetchTasks}>Reset Filters</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <button onClick={() => setIsModalOpen(false)} className="modal-close is-large" aria-label="close"></button>
+      </div>
+
       <h2 className='title is-2'>Task List</h2>
-      <div className='block'>
-        <Link to={'/task/add'} className='button is-link'>Add Task</Link>
+      <div className='block level'>
+        <Link to={'/task/add'} className='button is-link level-item'>Add Task</Link>
+        <button onClick={() => setIsModalOpen(!isModalOpen)} className='button level-item'>Filters</button>
       </div>
 
       <div className='block'>

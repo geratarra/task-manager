@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import Home from './routes/Home';
 import LoginForm from './routes/LoginForm';
 import SignupForm from './routes/SignupForm';
@@ -15,7 +15,11 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><Home /></ProtectedRoute>,
     children: [
       {
-        path:"list",
+        path: "", // Empty path for the redirect
+        element: <Navigate to="list" />, // Redirect to "list"
+      },
+      {
+        path: "list",
         element: <TaskList />,
       },
       {

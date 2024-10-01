@@ -36,13 +36,11 @@ function TaskForm() {
             const createTaskUrl = `${API_URI}/task/${state ? state._id : ''}`;
             const method = state ? 'put' : 'post';
             const response = await axios[method](createTaskUrl, {...formData, dueDate: Date.parse(dueDate)}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                withCredentials: true
             });
 
             if (response.status === 200 || response.status === 201) {
-                navigate('/');
+                navigate('/list');
             } else {
                 setError('Failed to create task. Please try again.');
             }
@@ -115,9 +113,12 @@ function TaskForm() {
                     </div>
                 </div>
 
-                <div className='field'>
+                <div className='field is-grouped'>
                     <div className='control'>
                         <button className='button is-link' type="submit">Submit</button>
+                    </div>
+                    <div className='control'>
+                        <button onClick={() => navigate('/list')} className='button is-danger'>Cancel</button>
                     </div>
                 </div>
             </form>

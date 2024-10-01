@@ -94,7 +94,7 @@ export const createAuthRouter = (authController: AuthController) => {
      *       400:
      *         description: Bad request - Missing authorization header
      */
-    router.post('/logout', authController.logout.bind(authController));
+    router.post('/logout', authenticateJWT, authController.logout.bind(authController));
 
     /**
      * @swagger

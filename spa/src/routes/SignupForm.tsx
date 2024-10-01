@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URI } from '../utils/constants';
+import { API_URI, PASSWORD_REGEX } from '../utils/constants';
 import axios from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { AuthInputs } from '../utils/types';
 
-type Inputs = {
-    userEmail: string
-    password: string
-}
 
 function SignupForm() {
     const [email, setEmail] = useState('');
@@ -17,10 +14,10 @@ function SignupForm() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<Inputs>();
+    } = useForm<AuthInputs>();
     const navigate = useNavigate();
 
-    const onSubmit: SubmitHandler<Inputs> = async (formData) => {
+    const onSubmit: SubmitHandler<AuthInputs> = async (formData) => {
         setError(null);
 
         try {
@@ -42,19 +39,17 @@ function SignupForm() {
         }
     };
 
-    // Password validation regex
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)} className='block'>
-                <h4 className='title is-4'>Signup</h4>
+        <div className='container py-5 is-flex is-flex-direction-column is-align-items-center'>
+            <h2 className='title is-2'>Signup</h2>
+            <form onSubmit={handleSubmit(onSubmit)} className='block column is-half'>
                 <div className='field'>
                     <label htmlFor="email" className='label'>Email:</label>
                     <div className="control">
                         <input
                             {...register("userEmail", { required: true })}
                             type="email"
+                            className='input'
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -69,9 +64,10 @@ function SignupForm() {
                             {...register("password", {
                                 required: true,
                                 minLength: 8,
-                                pattern: passwordRegex
+                                pattern: PASSWORD_REGEX
                             })}
                             type="password"
+                            className='input'
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -82,8 +78,8 @@ function SignupForm() {
                     {errors.password?.type === 'pattern' && <span className='help is-danger'>Password must contain at least one uppercase letter, one number, and one special character</span>}
                 </div>
                 <div className='field'>
-                    <div className='control'>
-                        <button className='button is-link' type="submit">Submit</button>
+                    <div className='control is-flex is-flex-direction-column is-align-items-center'>
+                        <button className='button is-primary' type="submit">Submit</button>
                     </div>
                 </div>
             </form>

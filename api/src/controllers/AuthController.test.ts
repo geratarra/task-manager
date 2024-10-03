@@ -21,15 +21,17 @@ const mockRequest = {
         email: mockUser.email,
         password: mockUser.password,
     },
-    headers: {
-        authorization: 'Bearer mock-valid-token'
+    cookies: {
+        jwt: 'Bearer mock-valid-token'
     }
 };
 
 const mockResponse = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
-    sendStatus: jest.fn()
+    sendStatus: jest.fn(),
+    cookie: jest.fn(),
+    clearCookie: jest.fn()
 };
 
 describe('AuthController - signup', () => {
@@ -110,6 +112,7 @@ describe('AuthController - login', () => {
 
         expect(mockResponse.status).toHaveBeenCalledWith(200);
         expect(mockResponse.json).toHaveBeenCalledWith(expect.objectContaining({ token: mockToken }));
+        expect(mockResponse.cookie).toHaveBeenCalledWith('jwt', mockToken, expect.any(Object));
     });
 
     it('should return 401 if user does not exist', async () => {
@@ -170,17 +173,18 @@ describe('AuthController - logout', () => {
         await authController.logout(mockRequest as Request, mockResponse as unknown as Response);
 
         expect(mockResponse.sendStatus).toHaveBeenCalledWith(204);
+        expect(mockResponse.clearCookie).toHaveBeenCalledWith(expect.any(String));
     });
 
     it('should return 400 if authorization header is missing', async () => {
         const invalidRequest = {
-            headers: {}
+            cookies: {}
         } as unknown as Request;
 
         await authController.logout(invalidRequest, mockResponse as unknown as Response);
 
         expect(mockResponse.status).toHaveBeenCalledWith(400);
-        expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Missing authorization header' });
+        expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Missing authorization token' });
     });
 
     it('should return 500 on server error', async () => {

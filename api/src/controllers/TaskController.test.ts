@@ -13,7 +13,8 @@ const mockTaskService = {
 const getTasksMockRequest = {
     user: {
         email: 'test@example.com'
-    }
+    },
+    query: {}
 } as unknown as Request;
 
 const getTaskMockRequest = {
